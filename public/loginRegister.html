@@ -26,6 +26,11 @@
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
 
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+
     <!-- TODO: Add SDKs for Firebase products that you want to use
          https://firebase.google.com/docs/web/setup#available-libraries -->
 
@@ -42,8 +47,6 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-
-        console.log(firebase);
     </script>
 
 </head>
@@ -89,9 +92,9 @@
                                 <div class="error"></div>
                                 <div class="form loginBox">
                                     <form method="" action="" accept-charset="UTF-8">
-                                        <input id="email" class="form-control" type="text" placeholder="Email"
+                                        <input id="emailEntered" class="form-control" type="text" placeholder="Email"
                                             name="email">
-                                        <input id="password" class="form-control" type="password" placeholder="Password"
+                                        <input id="passwordEntered" class="form-control" type="password" placeholder="Password"
                                             name="password">
                                         <input class="btn btn-default btn-login" type="button" value="Login"
                                             onclick="login();">
@@ -145,14 +148,28 @@
             firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword).catch(function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                alert(errorMessage)
+                console.log(errorCode);
+                console.log(errorMessage);
             });
-            alert("success!");
+            console.log("success!");
+            
 
         }
 
         function login() {
 
+            var emailEntered = $("#emailEntered").val();
+            var passwordEntered = $("#passwordEntered").val();
+
+            firebase.auth().signInWithEmailAndPassword(emailEntered, passwordEntered).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
+            console.log('Success');
+            window.location.href = "./index.html";
         }
 
     </script>
