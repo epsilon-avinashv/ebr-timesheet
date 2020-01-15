@@ -22,7 +22,7 @@
   <link href="assets/css/timesheet.css" rel="stylesheet" />
   <script>
     window.history.forward(1);
-    $('.user-email').text(localStorage.getItem('email'));
+    let emailstore = localStorage.getItem('email');
   </script>
 </head>
 
@@ -39,7 +39,7 @@
           </div>
         </a>
         <a href="#" class="simple-text"></a>
-        <div class="user-email">Avinash</div>
+        <div class="user-email"></div>
         
       </div>
       <div class="sidebar-wrapper">
@@ -338,6 +338,7 @@
   <script src="assets/js/myfirebase.js" type="text/javascript"></script>
   <script>
     checkLogin();
+    $('.user-email').text(emailstore);
   </script>
 </body>
 

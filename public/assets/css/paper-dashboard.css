@@ -4766,10 +4766,10 @@ License - nucleoapp.com/license/
 .sidebar .logo a.logo-mini,
 .off-canvas-sidebar .logo a.logo-mini {
   opacity: 1;
-  float: left;
-  width: 34px;
+  /* float: left; */
+  width: 35%;
   text-align: center;
-  margin-left: 10px;
+  margin-left: 60px;
   margin-right: 12px;
 }
 
