@@ -25,7 +25,7 @@ function register() {
         alert(errorMessage)
     });
     alert("success!");
-
+    window.location.href = './timesheet.html';
 }
 
 function login() {
