@@ -1,0 +1,14 @@
+/* Timesheet CSS */
+
+.dataInputField{
+    width: 80%;
+}
+
+.fixedRow{
+    background: #faebd7;
+}
+
+.dynamicRow{
+    background: #f0f8ff;
+}
+
