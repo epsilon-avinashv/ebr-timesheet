@@ -29,25 +29,28 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="container login-container">
-            <div class="row">
-                <div class="col-md-6 login-form-1">
-                    <h3>Register</h3>
-                    <form>
-                        <div class="form-group">
-                            <input id="userEmail" class="form-control" type="text" placeholder="Email" name="email">
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-3">&nbsp;</div>
+            <div class="col-md-6 login-form-1">
+                <h3>Register</h3>
+                <form>
+                    <div class="form-group">
+                        <input id="userEmail" class="form-control" type="text" placeholder="Email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <input id="userPassword" class="form-control" type="password" placeholder="Password"
+                            name="password">
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btnSubmit" value="Login" onclick="register();">
+                    </div>
+                    <div class="form-group">
+                            Already Registered? <a href="./index.html" class="">Login here</a>
                         </div>
-                        <div class="form-group">
-                            <input id="userPassword" class="form-control" type="password" placeholder="Password"
-                                name="password">
-                        </div>
-                        <div class="form-group">
-                            <input class="btn btn-default btn-login" type="button" value="Login" onclick="register();">
-                        </div>
-                    </form>
-                </div>
+                </form>
             </div>
+            <div class="col-md-3">&nbsp;</div>
         </div>
     </div>
 </body>
