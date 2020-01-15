@@ -34,7 +34,10 @@ function login() {
     var passwordEntered = $("#passwordEntered").val();
 
     firebase.auth().signInWithEmailAndPassword(emailEntered, passwordEntered)
-        .then(() => {
+        .then((data) => {
+            //console.log(JSON.stringify(data));
+            localStorage.setItem("uid", data.user.uid);
+            localStorage.setItem("email", data.user.email);
             alert('Login Successfull!');
             window.location.href = './timesheet.html';
         })
@@ -47,13 +50,20 @@ function login() {
 
 function logout() {
     firebase.auth().signOut().then(function () {
-        // Sign-out successful.
         console.log('User Logged Out!');
         window.location.href = './index.html';
+        localStorage.clear();
     }).catch(function (error) {
-        // An error happened.
         console.log(error);
     });
+}
+
+function checkLogin() {
+    let localdata = localStorage.getItem('uid');
+    if(!localdata){
+        alert('User not Authorized');
+        window.location.href = './index.html';
+    }
 }
 
 $(".add-row").click(function () {
