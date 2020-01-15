@@ -22,6 +22,7 @@
   <link href="assets/css/timesheet.css" rel="stylesheet" />
   <script>
     window.history.forward(1);
+    $('.user-email').text(localStorage.getItem('email'));
   </script>
 </head>
 
@@ -38,8 +39,8 @@
           </div>
         </a>
         <a href="#" class="simple-text"></a>
-        Avinash Viswanathan
-        </a>
+        <div class="user-email">Avinash</div>
+        
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
