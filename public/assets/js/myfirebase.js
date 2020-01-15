@@ -18,25 +18,31 @@ function register() {
     var userEmail = $("#userEmail").val();
     var userPassword = $("#userPassword").val();
 
-    firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword).catch(function (error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        alert(errorMessage)
-    });
-    alert("success!");
+    firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword)
+        .then(() => {
+            alert('Registration Successfull!');
+        })
+        .catch(function (error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage)
+        });
 }
 
 function login() {
     var emailEntered = $("#emailEntered").val();
     var passwordEntered = $("#passwordEntered").val();
 
-    firebase.auth().signInWithEmailAndPassword(emailEntered, passwordEntered).catch(function (error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        alert(errorMessage)
-    });
-    alert("success!");
-    window.location.href = './timesheet.html';
+    firebase.auth().signInWithEmailAndPassword(emailEntered, passwordEntered)
+        .then(() => {
+            alert('Login Successfull!');
+            window.location.href = './timesheet.html';
+        })
+        .catch(function (error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage)
+        });
 }
 
 function logout() {

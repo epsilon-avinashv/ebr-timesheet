@@ -46,13 +46,19 @@
                         <input type="button" class="btnSubmit" value="Login" onclick="register();">
                     </div>
                     <div class="form-group">
-                            Already Registered? <a href="./index.html" class="">Login here</a>
-                        </div>
+                        Already Registered? <a href="./index.html" class="">Login here</a>
+                    </div>
                 </form>
             </div>
             <div class="col-md-3">&nbsp;</div>
         </div>
     </div>
 </body>
+<script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
 
 </html>
