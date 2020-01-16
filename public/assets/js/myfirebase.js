@@ -96,13 +96,23 @@ function writeUserData(empId, name, email, competency, date, brand, team, projec
                 Hours: hours
             }
 
-            let ref = firebase.database().ref().child('timesheet');
+            let ref = firebase.database().ref('associates/' + empId + '/timesheet');
             ref.push(appendTimesheet, err => console.log(err ? 'error while pushing' : 'successful push'));
 
         } else {
 
         }
     });
+}
+
+function checkRecords(empId){
+    var rowData = [];
+    firebase.database().ref('associates/' + empId + '/timesheet').once('value', snapshot => {
+      snapshot.forEach(obj => {
+        rowData.push([obj.val().date, obj.val().brand, obj.val().Team, obj.val().ProjectCode, obj.val().Activity, obj.val().Hours]);
+      })
+      console.log(rowData); // shows your points in array
+    })
 }
 
 $(".add-row").click(function () {
@@ -122,6 +132,10 @@ $(".add-row").click(function () {
     $(".dynamicVal").append(markup);
 
     writeUserData(empId, name, email, competency, dateEntry, brand, team, projectCode, activity, hours);
+    setTimeout(function(){
+        checkRecords(empId);
+    },1000)
+    
 });
 
 // Find and remove selected table rows
@@ -134,8 +148,9 @@ $(".delete-row").click(function () {
 });
 
 function chkbk(obj) {
-    console.log($(obj).siblings("td"));
+    
 }
+
 
 
 
