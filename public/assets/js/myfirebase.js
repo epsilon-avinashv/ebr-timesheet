@@ -76,8 +76,9 @@ $(".add-row").click(function () {
     var projectCode = $("#projectCode").val();
     var activity = $("#activity").val();
     var hours = $("#hours").val();
+    var i = Math.floor((Math.random() * 100) + 1);
 
-    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record'></td><td>" + empId + "</td><td>" + name + "</td><td>" + competency + "</td><td>" + dateEntry + "</td><td>" + brand + "</td><td>" + team + "</td><td>" + projectCode + "</td><td>" + activity + "</td><td>" + hours + "</td><td>&nbsp;</td></tr>";
+    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' onchange=chkbk('"+ i +"') id='"+ i +"'></td><td>" + empId + "</td><td>" + name + "</td><td>" + competency + "</td><td>" + dateEntry + "</td><td>" + brand + "</td><td>" + team + "</td><td>" + projectCode + "</td><td>" + activity + "</td><td>" + hours + "</td><td>&nbsp;</td></tr>";
     $(".dynamicVal").append(markup);
 });
 
@@ -89,4 +90,11 @@ $(".delete-row").click(function () {
         }
     });
 });
+
+function chkbk(obj){
+    console.log($(obj).siblings("td"));
+}
+
+
+
 
