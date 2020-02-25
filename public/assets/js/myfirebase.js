@@ -12,6 +12,7 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 
 function register() {
@@ -77,27 +78,93 @@ function checkLogin() {
     });
 }
 
+
+function renderAssociate(doc) {
+    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' onchange=chkbk('" + doc.id + "') id='" + doc.id + "'></td><td>" + doc.data().empId + "</td><td>" + doc.data().name + "</td><td>" + doc.data().competency + "</td><td>" + doc.data().date + "</td><td>" + doc.data().brand + "</td><td>" + doc.data().team + "</td><td>" + doc.data().projectcode + "</td><td>" + doc.data().activity + "</td><td>" + doc.data().hours + "</td><td>&nbsp;</td></tr>";
+    $(".dynamicVal").append(markup);
+}
+
+db.collection('associates').get().then(snapshot => {
+    snapshot.docs.forEach(doc => {
+        db.collection('associates').doc(doc.id).collection('timesheet').get().then(snaps => {
+            if (snaps.docs == 0) {
+                renderAssociate(snaps);
+            } else {
+                snaps.docs.forEach(shots => {
+                    renderAssociate(shots);
+                })
+            }
+        });
+    });
+});
+
+
 function writeUserData(empId, name, email, competency, date, brand, team, projectcode, activity, hours) {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            firebase.database().ref('associates/' + empId).set({
-                empId: empId,
-                name: name,
-                email: email,
-                competency: competency
+            db.collection('associates').get().then(snapshot => {
+                if (snapshot.docs.length == 0) {
+                    db.collection('associates').add({
+                        empId: empId,
+                        name: name,
+                        email: email,
+                        competency: competency
+                    });
+                    snapshot.docs.forEach(doc => {
+                        if (doc.data().empId == empId) {
+                            db.collection('associates').doc(doc.id).collection('timesheet').add({
+                                empId: empId,
+                                name: name,
+                                email: email,
+                                competency: competency,
+                                date: date,
+                                brand: brand,
+                                team: team,
+                                projectcode: projectcode,
+                                activity: activity,
+                                hours: hours
+                            })
+                        }
+                    });
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        if (doc.data().empId == empId) {
+                            db.collection('associates').doc(doc.id).collection('timesheet').add({
+                                empId: empId,
+                                name: name,
+                                email: email,
+                                competency: competency,
+                                date: date,
+                                brand: brand,
+                                team: team,
+                                projectcode: projectcode,
+                                activity: activity,
+                                hours: hours
+                            })
+                        }
+                    });
+                }
             });
 
-            let appendTimesheet = {
-                date: date,
-                brand: brand,
-                Team: team,
-                ProjectCode: projectcode,
-                Activity: activity,
-                Hours: hours
-            }
 
-            let ref = firebase.database().ref('associates/' + empId + '/timesheet');
-            ref.push(appendTimesheet, err => console.log(err ? 'error while pushing' : 'successful push'));
+            // db.collection('associates').add({
+            //     empId: empId,
+            //     name: name,
+            //     email: email,
+            //     competency: competency
+            // });
+
+            // let appendTimesheet = {
+            //     date: date,
+            //     brand: brand,
+            //     Team: team,
+            //     ProjectCode: projectcode,
+            //     Activity: activity,
+            //     Hours: hours
+            // }
+
+            // let ref = firebase.database().ref('associates/' + empId + '/timesheet');
+            // ref.push(appendTimesheet, err => console.log(err ? 'error while pushing' : 'successful push'));
 
         } else {
 
@@ -105,14 +172,8 @@ function writeUserData(empId, name, email, competency, date, brand, team, projec
     });
 }
 
-function checkRecords(empId){
-    var rowData = [];
-    firebase.database().ref('associates/' + empId + '/timesheet').once('value', snapshot => {
-      snapshot.forEach(obj => {
-        rowData.push([obj.val().date, obj.val().brand, obj.val().Team, obj.val().ProjectCode, obj.val().Activity, obj.val().Hours]);
-      })
-      console.log(rowData); // shows your points in array
-    })
+function checkRecords(empId) {
+
 }
 
 $(".add-row").click(function () {
@@ -126,16 +187,21 @@ $(".add-row").click(function () {
     var projectCode = $("#projectCode").val();
     var activity = $("#activity").val();
     var hours = $("#hours").val();
-    var i = Math.floor((Math.random() * 100) + 1);
+    // var i = Math.floor((Math.random() * 100) + 1);
 
-    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' onchange=chkbk('" + i + "') id='" + i + "'></td><td>" + empId + "</td><td>" + name + "</td><td>" + competency + "</td><td>" + dateEntry + "</td><td>" + brand + "</td><td>" + team + "</td><td>" + projectCode + "</td><td>" + activity + "</td><td>" + hours + "</td><td>&nbsp;</td></tr>";
-    $(".dynamicVal").append(markup);
+    // var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' onchange=chkbk('" + i + "') id='" + i + "'></td><td>" + empId + "</td><td>" + name + "</td><td>" + competency + "</td><td>" + dateEntry + "</td><td>" + brand + "</td><td>" + team + "</td><td>" + projectCode + "</td><td>" + activity + "</td><td>" + hours + "</td><td>&nbsp;</td></tr>";
+    // $(".dynamicVal").append(markup);
 
     writeUserData(empId, name, email, competency, dateEntry, brand, team, projectCode, activity, hours);
-    setTimeout(function(){
-        checkRecords(empId);
-    },1000)
-    
+    db.collection('associates').get().then(snapshot => {
+        snapshot.docs.forEach(doc => {
+            renderAssociate(doc);
+        });
+    });
+    // setTimeout(function () {
+    //     checkRecords(empId);
+    // }, 1000)
+
 });
 
 // Find and remove selected table rows
@@ -148,7 +214,7 @@ $(".delete-row").click(function () {
 });
 
 function chkbk(obj) {
-    
+
 }
 
 

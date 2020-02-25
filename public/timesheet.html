@@ -159,7 +159,7 @@
                           FED
                         </td>
                         <td>
-                          <input type="date" id="dateEntry" />
+                          <input type="week" id="dateEntry" />
                         </td>
                         <td>
                           <select id="brand">
@@ -275,7 +275,7 @@
                         <td nowrap><button class="add-row">Add Record</button></td>
                       </tr>
                     </tbody>
-                    <tbody class="dynamicVal">
+                    <tbody class="dynamicVal" id="dynamicRow">
 
                     </tbody>
                   </table>
@@ -333,6 +333,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
   <script src="assets/js/myfirebase.js" type="text/javascript"></script>
   <script>
