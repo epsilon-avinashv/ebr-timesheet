@@ -22,10 +22,6 @@
     <script src="assets/js/core/jquery.min.js"></script>
     <script src="assets/js/core/bootstrap.min.js"></script>
     <script src="assets/js/login-register.js" type="text/javascript"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
-    <script src="assets/js/myfirebase.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -36,14 +32,26 @@
                 <h3>Register</h3>
                 <form>
                     <div class="form-group">
-                        <input id="userEmail" class="form-control" type="text" placeholder="Email" name="email">
+                        <input id="employeeName" class="form-control" type="text" placeholder="Name"
+                            name="name" required>
                     </div>
+                    <div class="form-group">
+                        <input id="employeeId" class="form-control" type="text" placeholder="Employee Id"
+                            name="EmployeeId" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="competency" class="form-control" type="text" placeholder="Competency"
+                            name="competency" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="userEmail" class="form-control" type="text" placeholder="Email Id" name="email" required>
+                    </div>                                        
                     <div class="form-group">
                         <input id="userPassword" class="form-control" type="password" placeholder="Password"
-                            name="password">
-                    </div>
+                            name="password" required>
+                    </div>                    
                     <div class="form-group">
-                        <input type="button" class="btnSubmit" value="Login" onclick="register();">
+                        <input type="button" class="btnSubmit" value="Register" onclick="register();">
                     </div>
                     <div class="form-group">
                         Already Registered? <a href="./index.html" class="">Login here</a>
@@ -54,6 +62,11 @@
         </div>
     </div>
 </body>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+<script src="assets/js/myfirebase.js" type="text/javascript"></script>
 <script>
     history.pushState(null, null, location.href);
     window.onpopstate = function () {

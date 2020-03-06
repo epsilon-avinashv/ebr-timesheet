@@ -15,36 +15,53 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 
+
 function register() {
-    var userEmail = $("#userEmail").val();
-    var userPassword = $("#userPassword").val();
+    let userEmail = $("#userEmail").val();
+    let userPassword = $("#userPassword").val();
+    let empId = $("#employeeId").val();
+    let empName = $("#employeeName").val();
+    let competency = $("#competency").val();
 
     firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword)
         .then(() => {
+            localStorage.setItem("eid", empId);
+            localStorage.setItem("email", userEmail);
+            localStorage.setItem("ename", empName);
+            localStorage.setItem("compt", competency);
+            createUser();
             alert('Registration Successfull!');
+            window.location.href = './index.html';
         })
         .catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
+            let errorCode = error.code;
+            let errorMessage = error.message;
             alert(errorMessage)
         });
+
+    db.collection('associates').add({
+        empId: localStorage.getItem('eid'),
+        name: localStorage.getItem('ename'),
+        email: localStorage.getItem('email'),
+        competency: localStorage.getItem('compt')
+    });
 }
 
 function login() {
-    var emailEntered = $("#emailEntered").val();
-    var passwordEntered = $("#passwordEntered").val();
+    let emailEntered = $("#emailEntered").val();
+    let passwordEntered = $("#passwordEntered").val();
 
     firebase.auth().signInWithEmailAndPassword(emailEntered, passwordEntered)
         .then((data) => {
             //console.log(JSON.stringify(data));
             localStorage.setItem("uid", data.user.uid);
-            localStorage.setItem("email", data.user.email);
+            //localStorage.setItem("email", data.user.email);
             alert('Login Successfull!');
             window.location.href = './timesheet.html';
         })
         .catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
+            let errorCode = error.code;
+            let errorMessage = error.message;
             alert(errorMessage)
         });
 }
@@ -58,6 +75,16 @@ function logout() {
         console.log(error);
     });
 }
+
+function createUser() {
+    // db.collection('associates').add({
+    //     empId: localStorage.getItem('eid'),
+    //     name: localStorage.getItem('ename'),
+    //     email: localStorage.getItem('email'),
+    //     competency: localStorage.getItem('compt')
+    // });
+}
+
 
 function checkLogin() {
     // let localdata = localStorage.getItem('uid');
@@ -80,22 +107,28 @@ function checkLogin() {
 
 
 function renderAssociate(doc) {
-    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' onchange=chkbk('" + doc.id + "') id='" + doc.id + "'></td><td>" + doc.data().empId + "</td><td>" + doc.data().name + "</td><td>" + doc.data().competency + "</td><td>" + doc.data().date + "</td><td>" + doc.data().brand + "</td><td>" + doc.data().team + "</td><td>" + doc.data().projectcode + "</td><td>" + doc.data().activity + "</td><td>" + doc.data().hours + "</td><td>&nbsp;</td></tr>";
+    var markup = "<tr class='dynamicRow'><td><input type='checkbox' name='record' class='checkbox' id='" + doc.id + "'></td><td>" + doc.data().empId + "</td><td>" + doc.data().name + "</td><td>" + doc.data().competency + "</td><td>" + doc.data().date + "</td><td>" + doc.data().brand + "</td><td>" + doc.data().team + "</td><td>" + doc.data().projectcode + "</td><td>" + doc.data().activity + "</td><td>" + doc.data().hours + "</td><td>&nbsp;</td></tr>";
     $(".dynamicVal").append(markup);
 }
 
-db.collection('associates').get().then(snapshot => {
-    snapshot.docs.forEach(doc => {
-        db.collection('associates').doc(doc.id).collection('timesheet').get().then(snaps => {
-            if (snaps.docs == 0) {
-                renderAssociate(snaps);
-            } else {
-                snaps.docs.forEach(shots => {
-                    renderAssociate(shots);
-                })
-            }
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        db.collection('associates').get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                if (doc.data().empId == localStorage.getItem('eid')) {
+                    db.collection('associates').doc(doc.id).collection('timesheet').get().then(snaps => {
+                        if (snaps.docs == 0) {
+                            renderAssociate(snaps);
+                        } else {
+                            snaps.docs.forEach(shots => {
+                                renderAssociate(shots);
+                            })
+                        }
+                    });
+                }
+            });
         });
-    });
+    }
 });
 
 
@@ -146,26 +179,6 @@ function writeUserData(empId, name, email, competency, date, brand, team, projec
                 }
             });
 
-
-            // db.collection('associates').add({
-            //     empId: empId,
-            //     name: name,
-            //     email: email,
-            //     competency: competency
-            // });
-
-            // let appendTimesheet = {
-            //     date: date,
-            //     brand: brand,
-            //     Team: team,
-            //     ProjectCode: projectcode,
-            //     Activity: activity,
-            //     Hours: hours
-            // }
-
-            // let ref = firebase.database().ref('associates/' + empId + '/timesheet');
-            // ref.push(appendTimesheet, err => console.log(err ? 'error while pushing' : 'successful push'));
-
         } else {
 
         }
@@ -208,13 +221,23 @@ $(".add-row").click(function () {
 $(".delete-row").click(function () {
     $(".dynamicVal").find('input[name="record"]').each(function () {
         if ($(this).is(":checked")) {
-            $(this).parents("tr").remove();
+            var r = confirm("Are you sure?");
+            if (r == true) {
+                $(this).parents("tr").remove();
+                chkbk($(this).attr('id'));
+            } else {
+
+            }
         }
     });
 });
 
 function chkbk(obj) {
-
+    db.collection('associates').get().then(snapshot => {
+        snapshot.docs.forEach(doc => {
+            db.collection('associates').doc(doc.id).collection('timesheet').doc(obj).delete();
+        });
+    });
 }
 
 
